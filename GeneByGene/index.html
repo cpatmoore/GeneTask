@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html data-ng-app="samples">
+<head>
+    <title>AngularJS Gene by Gene Demos</title>
+    <link href="Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="Content/bootstrap-responsive.min.css" rel="stylesheet" />
+    <link href="Content/styles.css" rel="stylesheet" />
+</head>
+<body data-ng-controller="samplesController" data-ng-init="CreatedAt='10/10/2016'">
+    <h2>
+        <img src="Content/images/angularShield.png" />ngularJS Gene by Gene Demos</h2>
+    <div class="row">
+        <div class="span4 section">
+            <h5>Demos:</h5>
+            <ol>
+                <li data-ng-repeat="page in pages">
+                    <a href="{{href}}" data-ng-click="loadPage(page)">{{ page.title }}</a>
+                </li>
+            </ol>
+            Status Filter 0 thru 3 <br />
+            <input type="range" data-ng-model="StatusVar" min="0" max="3" />&nbsp;&nbsp; {{ StatusVar }}
+            <br/>
+            
+            Last Name Filter:<br />
+            <input type="text" data-ng-model="userVar" placeholder="Filter Name" />&nbsp;&nbsp; {{ userVar }}
+            <br />
+            <br />
+            Barcode:<br />
+            <input type="text" data-ng-model="Barcode" placeholder="Barcode" />&nbsp;&nbsp; {{ Barcode }}
+            <br />
+            CreatedAt:<br />
+            <input type="text" data-ng-model="CreatedAt" placeholder="Created At" />&nbsp;&nbsp; {{ CreatedAt }}
+            <br />
+            Created By 0 thru 9:<br />
+            <input type="range" data-ng-model="CreatedBy" min="0" max="9" />&nbsp;&nbsp; {{ CreatedBy }}
+            <br /> 
+            Status Id 0 thru 3:<br />
+            <input type="range" data-ng-model="StatusId" min="0" max="3" />&nbsp;&nbsp; {{ StatusId }}
+            <br />
+            <!--<hr />-->
+            <h5>Status Key</h5>           
+            <ul>
+                <li> 0 - Received </li> 
+                <li> 1 - Accessioning </li>
+                <li> 2 - In Lab </li>
+                <li> 3 - Report Generation </li>        
+            </ul>
+
+            <h5>User Key</h5>
+            <ul>
+                <li> 0 - Kristine Butler </li>
+                <li> 1 - Alfred	McKenzie </li>
+                <li> 2 - Cora	Hunt </li>
+                <li> 3 - Brad	Huff </li>
+                <li> 4 - Dewey	McDonald </li>
+                <li> 5 - Orlando	Holt </li>
+                <li> 6 - Clint	Reid </li>
+                <li> 7 - Kim	Mullins </li>
+                <li> 8 - Blanche	Mack </li>
+                <li> 9 - Dwayne	Pena </li>
+            </ul>
+        </div>        
+        <div class="span8">
+            <ng-include src="template"></ng-include>
+            <!-- <div id="sampleContent"></div> -->
+            <br />
+        </div>
+    </div>
+
+    <script src="Scripts/jquery-1.10.2.min.js"></script>
+    <script src="Scripts/angular.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
+
+    <script>
+        var urlBase = '/DemoPartials/';
+       // var urlBase = 'http://localhost:55585/DemoPartials/';
+        var samplesModule = angular.module('samples', []);
+
+        samplesModule.config(function($controllerProvider, $provide) {
+            //Used to handle loading controllers dynamically
+            samplesModule.controller = $controllerProvider.register;
+            samplesModule.factory = $provide.factory;
+        });
+
+        samplesModule.controller('samplesController', function ($scope, $templateCache, $http, $location) {
+            $scope.template = '';
+            $scope.html = '';
+            $scope.StatusVar = '';
+            $scope.userVar = '';
+
+            $scope.pages = [
+                { title: 'All Samples', url: urlBase + '9_View_1.html' },
+                { title: 'Sample by status', url: urlBase + '9_View_2.html' },
+                { title: 'Samples Users contaning string', url: urlBase + '9_View_3.html' },
+                { title: 'Add new Sample', url: urlBase + '9_View_4.html', href: 'True' }
+            ];
+
+            $scope.loadPage = function (page) {
+
+                $scope.template = page.url;
+                $scope.StatusVar = StatusVar;
+                $scope.userVar = userVar;
+                $http({ method: 'GET', url: page.url, cache: $templateCache })
+                  .success(function (html) {
+                     $scope.html = html;                      
+                     $('textarea').text(html); //Had to go with this due to IE
+                  })
+                  .error(function (html, status) {
+                      $scope.html = 'Unable to load code: ' + status;
+                  });
+            }
+        });
+    </script>
+</body>
+</html>

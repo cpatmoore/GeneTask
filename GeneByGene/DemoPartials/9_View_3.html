@@ -1,0 +1,43 @@
+﻿    <div>
+        <div ng-controller="myController3">                        
+            <table>
+                <thead>
+                    <tr>                        
+                        <th>SampleId</th>
+                        <th>Barcode</th>
+                        <th>CreatedAt</th>
+                        <th>FirstName</th>
+                        <th>LastName</th>                      
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="row in data">    
+                        <td>{{row.SampleId}}</td>                    
+                        <td>{{row.Barcode}}</td>
+                        <td>{{row.CreatedAt}}</td>
+                        <td>{{row.FirstName}}</td>
+                        <td>{{row.LastName}}</td>                     
+                    </tr>
+                </tbody>
+            </table>
+            Error: {{error}}
+        </div>
+    </div>
+    <script>
+
+        samplesModule.controller("myController3", function ($scope, $http) {
+            
+            var onSuccess = function (data, status, headers, config) {
+                $scope.data = data;                
+            };
+
+            var onError = function (data, status, headers, config) {
+                $scope.error = status;
+            }
+
+            var promise = $http.get("api/Samples/name/" + $scope.userVar).success(onSuccess).error(onError);
+           
+        });
+    </script>
+
+

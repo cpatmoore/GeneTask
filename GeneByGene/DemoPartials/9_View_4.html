@@ -1,0 +1,29 @@
+﻿<div class="container" data-ng-app="samples">
+    <div  data-ng-controller="myController4">        
+        data: {{data}}
+        Error: {{error}}
+    </div>
+</div>
+    <script>        
+         samplesModule.controller('myController4', function ($scope, $http) {
+
+                var dataObj = {
+                        Barcode: $scope.Barcode,
+                        CreatedAt: $scope.CreatedAt,
+                        CreatedBy: $scope.CreatedBy,
+                        StatusIdVar: $scope.StatusId
+                };
+
+            var onSuccess = function (data, status, headers, config) {
+                $scope.data = data;                
+            };
+
+            var onError = function (data, status, headers, config) {
+                $scope.error = status;
+            }
+            var promise = $http.post("api/Samples", dataObj).success(onSuccess).error(onError);
+           
+        });
+    </script>
+
+
